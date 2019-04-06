@@ -10,11 +10,15 @@ struct pessoa{
 int main(){
     void *pBuffer; //aloc
     struct pessoa *p; //aloc
-    int *a; //alloc
+    int *a, *cp, *i; //alloc
+    cp = 0;
 
-    pBuffer = malloc(sizeof(int) + sizeof(struct pessoa));
+    pBuffer = malloc((sizeof(int)*2) + sizeof(struct pessoa));
     a = pBuffer;
-    p = (struct pessoa*)a + 1;
+    cp = a + 1;
+    i = cp + 1;
+    p = (struct pessoa*)i + 1;
+
 do{
     printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - exit\n\n"); scanf("%d", a);
 
@@ -22,21 +26,33 @@ do{
     if (*a >= 1 || *a<=5){
         switch(*a){
             case 1:
-                pBuffer = (void*) realloc(pBuffer, sizeof(int) + sizeof(struct pessoa));
+                pBuffer = realloc(pBuffer, (sizeof(int)*2) + sizeof(struct pessoa));
                 a = pBuffer;
-                p = (struct pessoa*)a + 1;
-
+                cp = a + 1;
+                i = cp + 1;
+                p = (struct pessoa*)i + 1;
 
                 printf("Nome:\n"); scanf("%s", p->nome);
                 printf("Idade:\n"); scanf("%d", &p->idade);
+                *cp = *cp + 1;
+
 
             break;
 
             case 2:
+               printf("i: %d, cp: %d", *i, *cp);
 
             break;
 
             case 3:
+                if (*cp >= 1){
+                    for(*i = 0; *i < *cp; *i = *i + 1){
+                        printf("Nome: %s\n", p->nome);
+                        printf("Idade: %d\n", &p->idade);
+                    }
+                }else{
+                    printf("Nenhum usuario foi digitado:\n");
+                }
 
             break;
 
