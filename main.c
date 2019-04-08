@@ -12,8 +12,13 @@ int main(){
     struct pessoa *p; //aloc
     int *a, *cp, *i; //alloc
     cp = 0;
-
-    pBuffer = malloc((sizeof(int)*2) + sizeof(struct pessoa));
+        /*if(*cp == 0){ // para nao zerar o malloc
+            cp = 1;
+        }*/
+    pBuffer = malloc((sizeof(int)*50) + (sizeof(struct pessoa)*5));
+        /*if(*cp == 1){ // recuperando valor original
+            cp = 0;
+        }*/
     a = pBuffer;
     cp = a + 1;
     i = cp + 1;
@@ -26,29 +31,33 @@ do{
     if (*a >= 1 || *a<=5){
         switch(*a){
             case 1:
-                pBuffer = realloc(pBuffer, (sizeof(int)*2) + sizeof(struct pessoa));
-                a = pBuffer;
+                pBuffer = realloc(pBuffer, (sizeof(int)*50) + (sizeof(struct pessoa)*5));
+              /*  a = pBuffer;
                 cp = a + 1;
                 i = cp + 1;
-                p = (struct pessoa*)i + 1;
+p = (struct pessoa*)i + 1;
+*/
 
                 printf("Nome:\n"); scanf("%s", p->nome);
                 printf("Idade:\n"); scanf("%d", &p->idade);
+                p = p + 1;
                 *cp = *cp + 1;
 
 
             break;
 
             case 2:
-               printf("i: %d, cp: %d", *i, *cp);
+               printf("i: %d, cp: %d", *i, *cp); //teste
 
             break;
 
             case 3:
                 if (*cp >= 1){
+                        p = (struct pessoa*)i + 1;
                     for(*i = 0; *i < *cp; *i = *i + 1){
                         printf("Nome: %s\n", p->nome);
-                        printf("Idade: %d\n", &p->idade);
+                        printf("Idade: %d\n\n", p->idade);
+                        p = p + 1;
                     }
                 }else{
                     printf("Nenhum usuario foi digitado:\n");
