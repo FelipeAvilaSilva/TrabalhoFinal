@@ -23,33 +23,38 @@ int main(){
         /*if(*cp == 1){ // recuperando valor original
             cp = 0;
         }*/
-    a = (int*)pBuffer;
-    cp = a + 1;
-    i = cp + 1;
-    p = (struct pessoa*)i + 1;
-    k = (int*)p + 1;
-    trashnome = (char*)k + 1;
+            a = (int*)pBuffer;
+            cp = a + 1;
+            i = cp + 1;
+            k = i + 1;
+            trashnome = (char*)(k + 1);
+            p = (struct pessoa*)(trashnome + 1);
 
 do{
-    printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - exit\n\n"); scanf("%d", a);
+    printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - remove\n 5 - sair\n\n"); scanf("%d", a);
 
 
-    if (*a >= 1 || *a<=5){
+    if (*a >= 1 && *a<=5){
         switch(*a){
             case 1:
-                pBuffer = realloc(pBuffer, (sizeof(int)*4) + (sizeof(struct pessoa)*5) + (sizeof(char)*20));
+                *cp = *cp + 1;
+                pBuffer = realloc(pBuffer, (sizeof(int)*4) + (sizeof(struct pessoa)*(*cp)) + (sizeof(char)*20));
 
                 a = (int*)pBuffer;
                 cp = a + 1;
                 i = cp + 1;
-                p = (struct pessoa*)i + 1;
-                k = (int*)p + 1;
-                trashnome = (char*)k + 1;
+                k = i + 1;
+                trashnome = (char*)(k + 1);
+                p = (struct pessoa*)(trashnome + 1); //
+
+                p = p + *cp;
 
                 printf("Nome:\n"); scanf("%s", p->nome);
                 printf("Idade:\n"); scanf("%d", &p->idade);
+
+                //*cp = *cp + 1;
+                //p = p + *cp;
                // p = p + 1;
-                *cp = *cp + 1;
 
 
             break;
@@ -63,14 +68,13 @@ do{
 
 
                 if(*cp >= 1){
-                    p = (struct pessoa*)i + 1;
+                    p = (struct pessoa*)(trashnome + 1);
+                    p = p + 1;
                     for(*k = 0; *k < *cp; *k = *k + 1){
                         //printf("p->nome %s\n", p->nome);
-                           if(strcmp(p->nome, trashnome) != 0){
+                           if(strcmp(p->nome, trashnome) == 0){
                                 printf("Nome: %s\n", p->nome);
                                 printf("Idade: %d\n\n", p->idade);
-                            }else{
-                            printf("Esse nome nao tem na agenda:\n");
                             }
                             p = p + 1;
                     }
@@ -90,11 +94,14 @@ do{
             case 3:
 
                 if (*cp >= 1){
-                        p = (struct pessoa*)i + 1;
+                         p = (struct pessoa*)(trashnome + 1);
+
                     for(*i = 0; *i < *cp; *i = *i + 1){
+                            p = p + 1;
                         printf("Nome: %s\n", p->nome);
                         printf("Idade: %d\n\n", p->idade);
-                        p = p + 1;
+                       // p = p + 1;
+
                     }
                 }else{
                     printf("Nenhum usuario foi digitado:\n");
@@ -115,7 +122,7 @@ do{
         printf("opção invalida:\n QUIT !\n");
         exit(1);
     }
-   }while(*a != 4);
+   }while(*a != 5);
 
     return 0;
 }
