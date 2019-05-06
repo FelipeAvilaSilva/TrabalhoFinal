@@ -8,6 +8,56 @@ struct pessoa{
     int idade;
 };
 
+struct pessoa *p_aux;
+
+void tirar(void *pBuffer, int *i, int *k, int *cp, char *trashnome, struct pessoa *p){
+p = p_aux + 1;
+    for(*i = 0; *i < *cp; *i = *i + 1){
+        if(strcmp(p->nome, trashnome) == 0){
+            for(*k = *i; *k < *cp; *k = *k + 1){
+                *p = *(p+1);
+                p = p + 1;
+            }
+            *cp = *cp - 1;
+            pBuffer = realloc(pBuffer, sizeof(int)*4 + sizeof(struct pessoa)*2*(*cp + 1));
+        }
+        p = p + 1;
+    }
+
+
+}
+
+
+void InsertSort(int *i, int *k, int *cp, struct pessoa *p){
+p = p_aux + 1;
+    for(*i = 1; *i < *cp; *i = *i + 1){
+        *k = *i - 1;
+        *p_aux = *(p + (*i));
+        while ((*k) >= 0 && (p+(*k))->idade > p_aux->idade){
+            *(p + *k + 1) = *(p + *k);
+            *k = *k -1;
+        }
+    *(p + *k + 1) = *p_aux;
+    }
+}
+
+void BubbleSort(int *i, int *k, int *cp, struct pessoa *p){
+p = p_aux + 1;
+    for(*i = 1; *i < *cp; *i = *i + *i){
+        for(*k = 0; *k < *cp -1; *k = *k + 1){
+            if((p+(*k))->idade > (p+(*k + 1))->idade){
+                //swap(*(p + *k), *(p + *k + 1));
+                *p_aux = *(p + *k);
+                *(p + *k) = *(p + *k + 1);
+                *(p + *k + 1) = *p_aux;
+            }
+
+        }
+
+    }
+
+}
+
 int main(){
     void *pBuffer;                  //somente ponteiros
     struct pessoa *p;
@@ -21,51 +71,50 @@ int main(){
         i = cp + 1;
         k = i + 1;
         trashnome = (char*)(k + 1);
-        p = (struct pessoa*)(trashnome + 1);
+        p_aux = (struct pessoa*)(trashnome + 1);
+        p = p_aux;
 
 do{
-    printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - remove\n 5 - sair\n\n"); scanf("%d", a);
+    printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - remove\n 5 - ordenar\n 6 - sair\n\n"); scanf("%d", a);
 
-    if(*a >= 1 && *a<=5){
+    if(*a >= 1 && *a<=6){
         switch(*a){
             case 1:
                 *cp = *cp + 1;                                      //contador de pessoa comeca com 1
                 pBuffer = realloc(pBuffer, (sizeof(int)*4) + (sizeof(struct pessoa)*(*cp)) + (sizeof(char)*20));       //realloc de 4 inteiros, struct de n pessoas, e 20 espaços para char
 
-                    a = (int*)pBuffer;                              //set no endereço de memoria    //casting   //armazenamento de variaveis
+                    a = (int*)pBuffer;
                     cp = a + 1;
                     i = cp + 1;
                     k = i + 1;
                     trashnome = (char*)(k + 1);
-                    p = (struct pessoa*)(trashnome + 1);            //inicio da agenda
+                    p_aux = (struct pessoa*)(trashnome + 1);
+                    p = p_aux;                                              //inicio da agenda
 
-                    p = p + *cp;                                    //pula pra proxima pessoa de acordo com o numero de pessoas
+                    p = p + *cp;                                          //pula pra proxima pessoa de acordo com o numero de pessoas
                     printf("Nome:\n"); scanf("%s", p->nome);
                     printf("Idade:\n"); scanf("%d", &p->idade);
             break;
 
             case 2:
                 printf("Digite o nome da pessoa que voce deseja buscar:\n");
-                scanf("%s", trashnome);                             //char para comparar o nome
-
+                scanf("%s", trashnome);                                          //char para comparar o nome
+                p = p_aux + 1;                                                  //set comeco da agenda
                 if(*cp >= 1){
-                    p = (struct pessoa*)(trashnome + 1);            //set comeco da agenda
-                    p = p + 1;                                      // pular 1, se nao buga na hora de buscar
                     for(*k = 0; *k < *cp; *k = *k + 1){
-                           if(strcmp(p->nome, trashnome) == 0){
-                                printf("Nome: %s\n", p->nome);
-                                printf("Idade: %d\n\n", p->idade);
-                            }
-                            p = p + 1;                              //prox nome da agenda
+                        if(strcmp((p+*k)->nome, trashnome) == 0){
+                            printf("Nome: %s\n", (p+*k)->nome);
+                            printf("Idade: %d\n\n", (p+*k)->idade);              // (p+*k) e um incrementador
+                        }
                     }
-                }else{
-                printf("nao tem nenhuma pessoa na agenda:\n");
+                }else if(*cp < 1){
+                    printf("nao tem nenhuma pessoa na agenda:\n");
                 }
             break;
 
             case 3:
                 if (*cp >= 1){
-                    p = (struct pessoa*)(trashnome + 1);    //set começo da agenda
+                    p = p_aux;   //set começo da agenda
                     for(*i = 0; *i < *cp; *i = *i + 1){
                             p = p + 1;                      //prox pessoa
                             printf("Nome: %s\n", p->nome);
@@ -77,10 +126,35 @@ do{
             break;
 
             case 4:
+                printf("Digite o nome a ser removido:\n");
+                scanf("%c", trashnome);
+
+
+                tirar(pBuffer, i, k, cp, trashnome, p);
 
             break;
 
             case 5:
+                   printf("1 - InsertSort\n");
+                   printf("2 - BubbleSort\n");
+
+                   scanf("%d", a);
+
+                    switch(*a){
+                        case 1:
+                            InsertSort(i, k, cp, p);
+                        break;
+
+                        case 2:
+                            BubbleSort(i, k, cp, p);
+                        break;
+                    }
+
+
+                                                         //ordenacao
+            break;
+
+            case 6:
                 printf("SAINDO DO PROGRAMA:\n"); exit(1);
             break;
             }
@@ -88,6 +162,7 @@ do{
         printf("opção invalida:\n QUIT !\n");
         exit(1);
     }
-   }while(*a != 5);
+   }while(*a != 6);
+   free(pBuffer);
     return 0;
 }
