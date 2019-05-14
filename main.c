@@ -8,7 +8,7 @@ struct pessoa{
     int idade;
 };
 
-struct pessoa *p_aux;
+struct pessoa *p_aux, min;
 
 void tirar(void *pBuffer, int *i, int *k, int *cp, char *trashnome, struct pessoa *p){
 p = p_aux + 1;
@@ -23,7 +23,6 @@ p = p_aux + 1;
         }
         p = p + 1;
     }
-
 
 }
 
@@ -57,6 +56,26 @@ p = p_aux + 1;
     }
 
 }
+
+void SelectionSort(int *a, int *i, int *k, struct pessoa *p, int *cp){	
+	p = p_aux + 1;
+	for(*i = 0; *i < (*cp-1); *i = *i + 1){
+		*a = *i;
+		for(*k = (*i+1); *k < *cp; *k = *k + 1){
+			if((p+*k)->idade < (p+*a)->idade){
+				*a = *k;
+			}
+		}
+			if((p+(*i))->idade != (p+(*a))->idade){
+				*p_aux = *(p + *i);
+				*(p + *i) = *(p + *a);
+				*(p + *a) = *p_aux;					
+			}
+		
+	}
+}
+
+
 
 int main(){
     void *pBuffer;                  //somente ponteiros
@@ -127,7 +146,7 @@ do{
 
             case 4:
                 printf("Digite o nome a ser removido:\n");
-                scanf("%c", trashnome);
+                scanf("%s", trashnome);
 
 
                 tirar(pBuffer, i, k, cp, trashnome, p);
@@ -137,6 +156,7 @@ do{
             case 5:
                    printf("1 - InsertSort\n");
                    printf("2 - BubbleSort\n");
+                   printf("3 - SelectionSort\n");
 
                    scanf("%d", a);
 
@@ -147,6 +167,10 @@ do{
 
                         case 2:
                             BubbleSort(i, k, cp, p);
+                        break;
+
+                        case 3:
+                        	SelectionSort(a, i, k, p, cp);
                         break;
                     }
 
