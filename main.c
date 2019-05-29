@@ -9,6 +9,7 @@ struct pessoa{
 };
 
 struct pessoa *p_aux, min;
+int *i, *k;
 
 void tirar(void *pBuffer, int *i, int *k, int *cp, char *trashnome, struct pessoa *p){
 p = p_aux + 1;
@@ -23,9 +24,7 @@ p = p_aux + 1;
         }
         p = p + 1;
     }
-
 }
-
 
 void InsertSort(int *i, int *k, int *cp, struct pessoa *p){
 p = p_aux + 1;
@@ -44,8 +43,7 @@ void BubbleSort(int *i, int *k, int *cp, struct pessoa *p){
 p = p_aux + 1;
     for(*i = 1; *i < *cp; *i = *i + *i){
         for(*k = 0; *k < *cp -1; *k = *k + 1){
-            if((p+(*k))->idade > (p+(*k + 1))->idade){
-                //swap(*(p + *k), *(p + *k + 1));
+            if((p+(*k))->idade > (p+(*k + 1))->idade){                
                 *p_aux = *(p + *k);
                 *(p + *k) = *(p + *k + 1);
                 *(p + *k + 1) = *p_aux;
@@ -75,12 +73,34 @@ void SelectionSort(int *a, int *i, int *k, struct pessoa *p, int *cp){
 	}
 }
 
+void QuickSort(struct pessoa *p, int esq, int *cp){
+	int a=0;
+	p = p_aux + 1;
+		*i = esq;
+		*k = *cp-1;
+		a = (p+((*i + *k)/2))->idade; //a = média
+		do{
+			while ((p+(*i))->idade < a) *i= *i+1;
+			while (a < (p+(*k))->idade)  *k= *k-1;
+			if (*i <= *k){
+				
+				*p_aux = *(p + *i);
+				*(p + *i) = *(p + *k);
+				*(p + *k) = *p_aux;
+
+				*i = *i+1;
+				*k = *k-1;
+			}			
+		}while (*i <= *k);
+			if (esq < *k) QuickSort(p, esq, k);
+			if (*i < *cp) QuickSort(p, *i, cp);
+}
 
 
 int main(){
     void *pBuffer;                  //somente ponteiros
     struct pessoa *p;
-    int *a, *cp, *i, *k;
+    int *a, *cp, dir;
     char *trashnome;
 
     pBuffer = malloc((sizeof(int)*4));
@@ -94,7 +114,8 @@ int main(){
         p = p_aux;
 
 do{
-    printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - remove\n 5 - ordenar\n 6 - sair\n\n"); scanf("%d", a);
+    printf("Escolha:\n\n 1 - incluir\n 2 - buscar\n 3 - listar\n 4 - remove\n 5 - ordenar\n 6 - sair\n\n"); 
+    scanf("%d", a);
 
     if(*a >= 1 && *a<=6){
         switch(*a){
@@ -147,16 +168,14 @@ do{
             case 4:
                 printf("Digite o nome a ser removido:\n");
                 scanf("%s", trashnome);
-
-
                 tirar(pBuffer, i, k, cp, trashnome, p);
-
             break;
 
             case 5:
                    printf("1 - InsertSort\n");
                    printf("2 - BubbleSort\n");
                    printf("3 - SelectionSort\n");
+                   printf("4 - QuickSort\n");
 
                    scanf("%d", a);
 
@@ -172,10 +191,11 @@ do{
                         case 3:
                         	SelectionSort(a, i, k, p, cp);
                         break;
-                    }
 
-
-                                                         //ordenacao
+                        case 4:           
+                           	QuickSort(p, 0, cp); 
+                        break;
+                    }                                                        
             break;
 
             case 6:
